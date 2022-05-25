@@ -478,7 +478,7 @@ function binSearch (haystack, needle, comparator = (a, b) => a - b) {
  */
 export function parseSEARCH (response) {
   if (!response || !response.payload || !response.payload.SEARCH || !response.payload.SEARCH.length) {
-    return
+    throw new Error(`parseSEARCH can not parse response: ${response}`)
   }
 
   const list = []
