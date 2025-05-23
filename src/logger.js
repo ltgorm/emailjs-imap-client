@@ -7,20 +7,20 @@ import {
 
 let SESSIONCOUNTER = 0
 
-export default function createDefaultLogger (username, hostname) {
+export default function createDefaultLogger (username, hostname, _logger = console) {
   const session = ++SESSIONCOUNTER
   const log = (level, messages) => {
     messages = messages.map(msg => typeof msg === 'function' ? msg() : msg)
     const date = new Date().toISOString()
     const logMessage = `[${date}][${session}][${username}][${hostname}] ${messages.join(' ')}`
     if (level === LOG_LEVEL_DEBUG) {
-      console.log('[DEBUG]' + logMessage)
+      _logger.debug(logMessage)
     } else if (level === LOG_LEVEL_INFO) {
-      console.info('[INFO]' + logMessage)
+      _logger.info(logMessage)
     } else if (level === LOG_LEVEL_WARN) {
-      console.warn('[WARN]' + logMessage)
+      _logger.warn(logMessage)
     } else if (level === LOG_LEVEL_ERROR) {
-      console.error('[ERROR]' + logMessage)
+      _logger.error(logMessage)
     }
   }
 

@@ -96,7 +96,7 @@ export default class Client {
     this.client.setHandler('fetch', (response) => this._untaggedFetchHandler(response)) // message has been updated (eg. flag change)
 
     // Activate logging
-    this.createLogger()
+    this.createLogger(options.logger)
     this.logLevel = propOr(LOG_LEVEL_ALL, 'logLevel', options)
   }
 
@@ -1011,8 +1011,8 @@ export default class Client {
     return (a.toUpperCase() === 'INBOX' ? 'INBOX' : a) === (b.toUpperCase() === 'INBOX' ? 'INBOX' : b)
   }
 
-  createLogger (creator = createDefaultLogger) {
-    const logger = creator((this._auth || {}).user || '', this._host)
+  createLogger (suppliedLogger) {
+    const logger = createDefaultLogger((this._auth || {}).user || '', this._host, suppliedLogger)
     this.logger = this.client.logger = {
       debug: (...msgs) => { if (LOG_LEVEL_DEBUG >= this.logLevel) { logger.debug(msgs) } },
       info: (...msgs) => { if (LOG_LEVEL_INFO >= this.logLevel) { logger.info(msgs) } },
