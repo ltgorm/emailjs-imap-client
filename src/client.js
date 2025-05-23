@@ -9,7 +9,8 @@ import {
   LOG_LEVEL_ERROR,
   LOG_LEVEL_WARN,
   LOG_LEVEL_INFO,
-  LOG_LEVEL_DEBUG
+  LOG_LEVEL_DEBUG,
+  LOG_LEVEL_ALL
 } from './common'
 
 var DEBUG_TAG = 'SMTP Client'
@@ -84,7 +85,8 @@ class SmtpClient {
     this._socketTimeoutPeriod = false // Timeout for sending in data mode, gets extended with every send()
 
     // Activate logging
-    this.createLogger()
+    this.createLogger(options.logger)
+    this.logLevel = LOG_LEVEL_ALL
 
     // Event placeholders
     this.onerror = (e) => { } // Will be run when an error occurs. The `onclose` event will fire subsequently.
@@ -873,9 +875,8 @@ class SmtpClient {
     return encode(authData.join('\x01'))
   }
 
-  createLogger (creator = createDefaultLogger) {
-    const logger = creator((this.options.auth || {}).user || '', this.host)
-    this.logLevel = this.LOG_LEVEL_ALL
+  createLogger (suppliedLogger) {
+    const logger = createDefaultLogger((this.options.auth || {}).user || '', this.host, suppliedLogger)
     this.logger = {
       debug: (...msgs) => { if (LOG_LEVEL_DEBUG >= this.logLevel) { logger.debug(msgs) } },
       info: (...msgs) => { if (LOG_LEVEL_INFO >= this.logLevel) { logger.info(msgs) } },
