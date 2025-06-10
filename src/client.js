@@ -688,8 +688,8 @@ class SmtpClient {
    */
   _actionAUTHComplete (command) {
     if (!command.success) {
-      this.logger.debug(DEBUG_TAG, 'Authentication failed: ' + command.data)
-      this._onError(new Error(command.data))
+      this.logger.debug(DEBUG_TAG, command.line)
+      this._onError(new Error(command.line))
       return
     }
 
